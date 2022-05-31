@@ -22,7 +22,7 @@
     
     <!-- Mention your GIT Repository -->
     <scm>
-        <developerConnection>scm:git:${git.url}</developerConnection>
+        <developerConnection>scm:git:http://${env.GIT-NAME}:${env.GIT-PASS}@github.com/mistryparas/hello-world.git</developerConnection>
         <url>${git.url}</url>
        <tag>HEAD</tag>  
     </scm>
