@@ -4,7 +4,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>myproject</artifactId>
-    <version>3.0.6</version>
+    <version>3.0.7-SNAPSHOT</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -24,7 +24,7 @@
     <scm>
         <developerConnection>scm:git:http://${env.GIT-NAME}:${env.GIT-PASS}@github.com/mistryparas/hello-world.git</developerConnection>
         <url>${git.url}</url>
-       <tag>v3.0.6</tag>  
+       <tag>HEAD</tag>  
     </scm>
 
 
