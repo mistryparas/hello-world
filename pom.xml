@@ -16,6 +16,8 @@
         <!-- git.url should not have / at the end. -->
         <!-- For an exampe, https://github.com/duclo/backend-shared -->
         <git.url>https://github.com/mistryparas/hello-world.git</git.url>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
     
     <!-- Mention your GIT Repository -->
