@@ -19,6 +19,8 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <docker.repository.url>192.168.56.250:8084/repository/sysadmin-service</docker.repository.url>
+        <docker.repo.username>admin</docker.repo.username>
+		<docker.repo.password>redhat</docker.repo.password>
     		<dockerfile.maven.plugin>1.4.13</dockerfile.maven.plugin>
     </properties>
     
