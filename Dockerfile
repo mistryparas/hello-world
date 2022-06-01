@@ -1,9 +1,12 @@
-FROM anapsix/alpine-java
+FROM openjdk:17-alpine
+MAINTAINER cloudops-devops
 
-MAINTAINER grouptest1
+ARG JAR_FILE
 
-COPY ./target/nexustest2-2.0.*-SNAPSHOT.jar /opt/
+RUN echo "JAR_FILE:- ${JAR_FILE}"
 
-CMD ["java", "-jar", "/opt/*.jar"]
+COPY ${JAR_FILE} /opt/backend.jar
+
+CMD ["java", "-jar", "/opt/backend.jar"]
 
 EXPOSE 8080:8080
