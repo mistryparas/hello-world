@@ -18,6 +18,8 @@
         <git.url>https://github.com/mistryparas/hello-world.git</git.url>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <docker.repository.url>192.168.56.250:8084/repository/sysadmin-service</docker.repository.url>
+    		<dockerfile.maven.plugin>1.4.13</dockerfile.maven.plugin>
     </properties>
     
     <!-- Mention your GIT Repository -->
@@ -42,6 +44,74 @@
             <type>maven-plugin</type>
         </dependency>
     </dependencies>
+    <profiles>
+    	<profile>
+    		<id>docker-random</id>
+    		<build>
+    			<plugins>
+    				<plugin>
+    					<groupId>com.spotify</groupId>
+    					<artifactId>dockerfile-maven-plugin</artifactId>
+    					<executions>
+    						<execution>
+    							<id>tag-build-release</id>
+    							<goals>
+    								<goal>build</goal>
+    								<goal>push</goal>
+    							</goals>
+    							<configuration>
+    								<tag>${BUILD_NUMBER}</tag>
+    							</configuration>
+    						</execution>
+    					</executions>
+    				</plugin>
+    			</plugins>
+    		</build>
+    	</profile>
+    	<profile>
+    		<id>docker-latest</id>
+    		<build>
+    			<plugins>
+    				<plugin>
+    					<groupId>com.spotify</groupId>
+    					<artifactId>dockerfile-maven-plugin</artifactId>
+    					<executions>
+    						<execution>
+    							<id>tag-latest-release</id>
+    							<goals>
+    								<goal>build</goal>
+    								<goal>push</goal>
+    							</goals>
+    							<configuration>
+    								<tag>latest</tag>
+    							</configuration>
+    						</execution>
+    					</executions>
+    				</plugin>
+    			</plugins>
+    		</build>
+    	</profile>
+    	<profile>
+    		<id>docker-release</id>
+    		<build>
+    			<plugins>
+    				<plugin>
+    					<groupId>com.spotify</groupId>
+    					<artifactId>dockerfile-maven-plugin</artifactId>
+    					<executions>
+    						<execution>
+    							<id>tag-version-release</id>
+    							<goals>
+    								<goal>build</goal>
+    								<goal>push</goal>
+    							</goals>
+    						</execution>
+    					</executions>
+    				</plugin>
+    			</plugins>
+    		</build>
+    	</profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>
@@ -57,6 +127,26 @@
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+    			<plugins>
+    				<plugin>
+    					<groupId>com.spotify</groupId>
+    					<artifactId>dockerfile-maven-plugin</artifactId>
+    					<version>${dockerfile.maven.plugin}</version>
+    					<configuration>
+    						<username>${docker.repo.username}</username>
+    						<password>${docker.repo.password}</password>
+    						<repository>${docker.repository.url}</repository>
+    						<tag>${project.version}</tag>
+    						<buildArgs>
+    							<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+    						</buildArgs>
+    						<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+    						<skipDockerInfo>true</skipDockerInfo>
+    					</configuration>
+    				</plugin>
+    			</plugins>
+    		</pluginManagement>
     </build>
     <repositories>
         <repository>
@@ -83,4 +173,3 @@
 
 
 </project>
-
