@@ -45,9 +45,9 @@ pipeline
             steps {
               sh '''
               docker login -u admin -p redhat 192.168.56.250:9092
-              docker tag nexustest2:2.${BUILD_NUMBER} 192.168.56.250:9092/dockertest2:2.${GitCommitID}.${BUILD_NUMBER}
-              docker push 192.168.56.250:9092/dockertest2:2.${GitCommitID}.${BUILD_NUMBER}
-              docker rmi -f nexustest2:2.${BUILD_NUMBER} 192.168.56.250:9092/dockertest2:2.${GitCommitID}.${BUILD_NUMBER}  '''
+              docker tag nexustest2:2.${BUILD_NUMBER} 192.168.56.250:9092/dockertest2:2.0.${BUILD_NUMBER}
+              docker push 192.168.56.250:9092/dockertest2:2.0.${BUILD_NUMBER}
+              docker rmi -f nexustest2:2.${BUILD_NUMBER} 192.168.56.250:9092/dockertest2:2.0.${BUILD_NUMBER}  '''
             }
         }
         
@@ -55,9 +55,9 @@ pipeline
         
         
      }
-   // post{
-   //     always{
-   //         cleanWs()
-   //         }
-   //     }
+    post{
+        always{
+            cleanWs()
+            }
+        }
 }
