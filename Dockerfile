@@ -8,6 +8,6 @@ COPY ./target/nexustest2-2.0.*-SNAPSHOT.jar /opt/
 
 CMD ["sh", "/opt/env_script.sh"]
 
-CMD ["java", "-jar", "/opt/*.jar"]
+CMD ["sleep", "1000"]
 
 EXPOSE 8080:8080
