@@ -2,9 +2,11 @@ FROM anapsix/alpine-java
 
 MAINTAINER grouptest1
 
-ENV INSTANCE_ID=$(openssl rand -base64 9)
+COPY .env_script.sh /opt/env_script.sh
 
 COPY ./target/nexustest2-2.0.*-SNAPSHOT.jar /opt/
+
+CMD ["sh", "/opt/env_script.sh"]
 
 CMD ["java", "-jar", "/opt/*.jar"]
 
