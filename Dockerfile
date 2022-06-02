@@ -2,7 +2,7 @@ FROM anapsix/alpine-java
 
 MAINTAINER grouptest1
 
-COPY .env_script.sh /opt/env_script.sh
+COPY ./env_script.sh /opt/env_script.sh
 
 COPY ./target/nexustest2-2.0.*-SNAPSHOT.jar /opt/
 
