@@ -1,6 +1,3 @@
-#!/bin/sh
-set -x
+#!/bin/bash
 HOSTID=$(hostname | cut -d "-" -f4)
-export INSTANCE_ID = $HOSTID
-#excute java file 
-java -jar /opt/backend.jar
+echo "HOSTID=\"$HOSTID\" > /opt/HOSTID
