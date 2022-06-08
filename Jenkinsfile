@@ -13,7 +13,6 @@ pipeline
                 )
               }
             }
-        }
         stage("Version update") {
             steps {
                sh  '''
