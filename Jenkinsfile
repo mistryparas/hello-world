@@ -6,7 +6,7 @@ pipeline
             steps {
               checkout(
                 [$class: 'GitSCM',
-                branches: [[name: '*/master']],
+                branches: [[name: '*/develop']],
                 extensions: [],
                 userRemoteConfigs: [[url: 'https://github.com/mistryparas/hello-world.git']]
                     ]
