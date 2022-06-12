@@ -13,7 +13,7 @@ pipeline
          }
          stage("Version update") {
             steps {
-               sh  '''sed -i "s/0.0.1-SNAPSHOT/0.0.${BUILD_NUMBER}-SNAPSHOT/g" {WORKSPACE}/pom.xml '''
+               sh  '''sed -i "s/0.0.1-SNAPSHOT/0.0.${BUILD_NUMBER}-SNAPSHOT/g" ${WORKSPACE}/pom.xml '''
             }
         }
 
