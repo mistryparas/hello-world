@@ -23,7 +23,7 @@ pipeline
         }
         stage("Upload Artifcat") {
             steps {
-            nexusPublisher nexusInstanceId: 'Nexusrepos', nexusRepositoryId: 'maven-mytest', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: '${WORKSPACE}/target/automation-0.0.${BUILD_NUMBER}-SNAPSHOT.jar']], mavenCoordinate: [artifactId: 'automation', groupId: 'com.example', packaging: 'jar', version: '0.0.${BUILD_NUMBER}-SNAPSHOT']]]
+            nexusPublisher nexusInstanceId: 'Nexusrepos', nexusRepositoryId: 'maven-mytest', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: '/var/lib/jenkins/workspace/CI-automation/target/automation-0.0.${BUILD_NUMBER}-SNAPSHOT.jar']], mavenCoordinate: [artifactId: 'automation', groupId: 'com.example', packaging: 'jar', version: '0.0.${BUILD_NUMBER}-SNAPSHOT']]]
             }
         }
         stage("Build-dockerimage") {
