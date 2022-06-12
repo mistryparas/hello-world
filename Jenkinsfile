@@ -43,7 +43,16 @@ pipeline
               '''
             }
         }
-
+        stage("CD-automation") {
+         steps {
+          script { 
+            env.BID="${BUILD_NUMBER}"
+            //env.image_name= sh (returnStdout: true,script: '''echo  $(printf 'VER\t${project.version}' | mvn help:evaluate | grep '^VER' | cut -f2| cut -d "-" -f1) ''')
+            //def trim=sh (returnStdout: true,script: '''echo ${image_name}''').trim()
+            //env.image="${trim}-${BID}"
+            build job: 'CD-pipeline', parameters: [string(name: 'image', value: "0.0.${BID}") ], wait: true}
+        }
+      }
 
 
 
