@@ -41,9 +41,9 @@ pipeline
             steps {
               sh '''
               docker login -u admin -p redhat 192.168.56.250:8086
-              docker tag automation:0.\${BUILD_NUMBER} 192.168.56.250:8086/dockertest/automation:0.\${BUILD_NUMBER}
-              docker push 192.168.56.250:8086/dockertest/automation:0.\${BUILD_NUMBER}
-              docker rmi -f automation:0.\${BUILD_NUMBER} 192.168.56.250:8086/dockertest/automation:0.\${BUILD_NUMBER}
+              docker tag automation:0.\${BUILD_NUMBER} 192.168.56.250:8086/dockertest/automation:0.0.\${BUILD_NUMBER}
+              docker push 192.168.56.250:8086/dockertest/automation:0.0.\${BUILD_NUMBER}
+              docker rmi -f automation:0.\${BUILD_NUMBER} 192.168.56.250:8086/dockertest/automation:0.0.\${BUILD_NUMBER}
               '''
             }
         }
