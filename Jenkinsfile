@@ -30,7 +30,23 @@ pipeline
             nexusPublisher nexusInstanceId: 'Nexusrepos', nexusRepositoryId: 'maven-mytest', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: '${WORKSPACE}/target/automation-0.0.${BUILD_NUMBER}-SNAPSHOT.jar']], mavenCoordinate: [artifactId: 'automation', groupId: 'com.example', packaging: 'jar', version: '0.0.${BUILD_NUMBER}-SNAPSHOT']]]
             }
         }
-
+        stage("Build-dockerimage") {
+            steps {
+            sh '''
+            docker build -t automation:0.\${BUILD_NUMBER} .
+            '''
+            }
+        }
+        stage("image push") {
+            steps {
+              sh '''
+              docker login -u admin -p redhat 192.168.56.250:8086
+              docker tag automation:0.\${BUILD_NUMBER} 192.168.56.250:8086/dockertest/automation:0.\${BUILD_NUMBER}
+              docker push 192.168.56.250:8086/dockertest/automation:0.\${BUILD_NUMBER}
+              docker rmi -f automation:0.\${BUILD_NUMBER} 192.168.56.250:8086/dockertest/automation:0.\${BUILD_NUMBER}
+              '''
+            }
+        }
 
 
 
