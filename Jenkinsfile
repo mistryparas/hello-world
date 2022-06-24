@@ -1,63 +1,51 @@
-pipeline
-{
-    agent any
-     stages {
-        stage("Checkout") {
-            steps {
-              script{
-              def ScmVar = checkout(
-                [$class: 'GitSCM',
-                branches: [[name: '*/master']],
-                extensions: [],
-                userRemoteConfigs: [[url: 'https://github.com/mistryparas/hello-world.git']]
-                    ]
-                )
-              def GitCommit = ScmVar.GIT_COMMIT
-              env.GitCommitID = sh(returnStdout: true, script: "git rev-parse --short ${GitCommit}").trim()
-              }
-            }
+
+pipeline {
+    agent any 
+        tools {
+            jdk 'openjdk17'
+            maven 'Maven-3.6.3'
         }
-        stage("Version update") {
-            steps {
-               sh  '''
-               sed -i "s/myproject/nexustest2/g" ${WORKSPACE}/pom.xml 
-               sed -i "s/0.0.1-SNAPSHOT/2.0.${BUILD_NUMBER}-SNAPSHOT/g" ${WORKSPACE}/pom.xml '''
-            }
+    stages {
+      stage (version) {
+        steps {
+            sh ''' mvn -version
+            java --version '''
         }
-        stage("Build") {
-            steps {
-               sh  '''mvn clean package '''
-            }
+      }
+      stage("Checkout") {
+      	steps {
+          checkout([$class: 'GitSCM',
+          branches: [[name: '*/myproject2']],
+          extensions: [],
+          userRemoteConfigs: [[url: 'https://github.com/mistryparas/hello-world.git']]]
+          )
         }
-        stage("Upload Artifcat") {
-            steps {
-            nexusPublisher nexusInstanceId: 'Nexusrepos', nexusRepositoryId: 'grouptest2', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './target/nexustest2-2.0.${BUILD_NUMBER}-SNAPSHOT.jar']], mavenCoordinate: [artifactId: 'nexustest2', groupId: 'com.example', packaging: 'jar', version: '2.0.${BUILD_NUMBER}-SNAPSHOT']]]
-            }
+      }
+      stage("Clean Package") {
+        steps {
+            sh ''' mvn clean package '''
         }
-        stage("Build-dockerimage") {
-            steps {
-              sh '''
-              docker build -t nexustest2:2.\${BUILD_NUMBER} .
-              '''
-            }
+      }
+      stage("build") {
+        steps {
+            sh '''VERSION=$(printf 'VER\t${project.version}' | mvn help:evaluate | grep '^VER' | cut -f2| cut -d "-" -f1) 
+            mvn deploy -P docker-latest -P docker-random -DBUILD_NUMBER=s${VERSION}-${BUILD_NUMBER} ''' 
         }
-        stage("image push") {
-            steps {
-              sh '''
-              docker login -u admin -p redhat 192.168.56.250:9092
-              docker tag nexustest2:2.${BUILD_NUMBER} 192.168.56.250:9092/dockertest2:2.${GitCommitID}.${BUILD_NUMBER}
-              docker push 192.168.56.250:9092/dockertest2:2.${GitCommitID}.${BUILD_NUMBER}
-              docker rmi -f nexustest2:2.${BUILD_NUMBER} 192.168.56.250:9092/dockertest2:2.${GitCommitID}.${BUILD_NUMBER}  '''
-            }
+      }
+      stage("export Env") {
+       	steps {
+       	  script {
+       	      env.VER= sh (returnStdout: true,script: '''echo $(printf 'VER\t${project.version}' | mvn help:evaluate | grep '^VER' | cut -f2| cut -d "-" -f1)-${BUILD_NUMBER}''')
+       	  }
+       	  sh '''echo "new $VER"'''
+       // 	build job: 'CD-backend', parameters: [$class: 'StringParameterValue', name: 'image', value: '8.0.${BUILD_NUMBER}'], wait: true	
+         build job: 'CD-backend', parameters: [string(name: 'image', value: "$VER")], wait: true  
+       	}
+      }
+    }
+    post{
+      always{
+        cleanWs()
         }
-        
-        
-        
-        
-     }
-   // post{
-   //     always{
-   //         cleanWs()
-   //         }
-   //     }
+      }
 }
