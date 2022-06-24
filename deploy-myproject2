@@ -2,19 +2,13 @@ pipeline {
     agent any 
         tools {
             jdk 'openjdk17'
-            maven 'Maven-3.8.5'
+            maven 'Maven-3.6.3'
         }
     stages {
       stage (version) {
         steps {
-            sh ''' mvn -version
-            java --version '''
+            sh ''' echo "below version is ${image}" '''
         }
       }
-      stage (build Version){
-        steps {
-           sh ''' echo ${Version} '''
-           }
-      }     
     }
 }
