@@ -15,7 +15,7 @@ pipeline {
       stage("Checkout") {
       	steps {
           checkout([$class: 'GitSCM',
-          branches: [[name: '*/myproject2']],
+          branches: [[name: '*/myproject1']],
           extensions: [],
           userRemoteConfigs: [[url: 'https://github.com/mistryparas/hello-world.git']]]
           )
@@ -39,7 +39,7 @@ pipeline {
        	  }
        	  sh '''echo "new $VER"'''
        // 	build job: 'CD-backend', parameters: [$class: 'StringParameterValue', name: 'image', value: '8.0.${BUILD_NUMBER}'], wait: true	
-         build job: 'deploy-myproject2', parameters: [string(name: 'image', value: "$VER")], wait: true  
+         build job: 'deploy-myproject1', parameters: [string(name: 'image', value: "$VER")], wait: true  
        	}
       }
     }
