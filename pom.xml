@@ -18,7 +18,7 @@
         <git.url>https://github.com/mistryparas/hello-world.git</git.url>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <docker.repository.url>192.168.56.250:8082/repository/duclo-docker</docker.repository.url>
+        <docker.repository.url>192.168.56.250:8082/repository/myproject2</docker.repository.url>
         <docker.repo.username>admin</docker.repo.username>
 		<docker.repo.password>redhat</docker.repo.password>
     		<dockerfile.maven.plugin>1.4.13</dockerfile.maven.plugin>
