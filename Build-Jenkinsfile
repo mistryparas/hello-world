@@ -39,7 +39,7 @@ pipeline {
        	  }
        	  sh '''echo "new $VER"'''
        // 	build job: 'CD-backend', parameters: [$class: 'StringParameterValue', name: 'image', value: '8.0.${BUILD_NUMBER}'], wait: true	
-         build job: 'CD-backend', parameters: [string(name: 'image', value: "$VER")], wait: true  
+         build job: 'deploy-myproject2', parameters: [string(name: 'image', value: "$VER")], wait: true  
        	}
       }
     }
