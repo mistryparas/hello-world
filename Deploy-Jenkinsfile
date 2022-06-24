@@ -1,14 +1,69 @@
 pipeline {
     agent any 
-        tools {
-            jdk 'openjdk17'
-            maven 'Maven-3.6.3'
-        }
     stages {
       stage (version) {
         steps {
             sh ''' echo "below version is ${image}" '''
         }
       }
-    }
+      stage("login ArgoCD"){
+        steps {
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'Kube-master', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'argocd login 192.168.56.102:31658 --username admin --password PpdKXz1TxLe4iyXO --insecure', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+        }
+      }
+      stage("Canary-Deploy"){
+        steps{
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'Kube-master', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'argocd app set myproject2 --helm-set canaryDeploy.tag="s${image}" --helm-set canaryDeploy.replicas="1"', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+        }
+      }
+      stage("Approval") {
+        steps {
+        input message: 'Canary Deployment successfully running Approval for deploy on dev pod', ok: 'Approval'
+        }
+      }
+      stage("dev-deploy"){
+        steps{
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'Kube-master', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'argocd app set myproject2 --helm-set canaryDeploy.replicas="0" --helm-set deployment.tag="${image}"', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])    
+        }
+      }
+      stage("cleanup"){
+        steps{
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'Kube-master', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'kubectl delete rs $(kubectl get rs -n myproject2 | grep canary | awk -F " " \'{print $1}\') -n myproject2', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])    
+        }
+      }
+      stage("update on helm"){
+        steps {
+        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/mistryparas/myhelm.git']]]
+        }
+      }
+      stage("update tag"){
+        steps {
+        sh '''#!/bin/bash
+        TAG=$(grep "tag"  ./myproject2/values.yaml|head -n1)
+        echo $TAG
+        sed -i "s/$TAG/  tag: ${image}/g" ./myproject2/values.yaml
+        TAG2=$(grep "tag"  ./myproject2/values.yaml|tail -n1)
+        echo $TAG2
+        sed -i "s/$TAG2/  tag: ${image}/g" ./myproject2/values.yaml'''    
+        }
+      }
+      stage("update helm chart on git"){
+        steps {
+          script {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            withCredentials([usernamePassword(credentialsId: 'd9246168-45b2-460e-b3ea-6877eb22d56f', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
+            sh "git add ."
+            sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'"
+            sh "git push https://${GIT_USERNAME}:${encodedPassword}@github.com/${GIT_USERNAME}/myhelm.git HEAD:main" }       
+                }
+            }
+          }
+      }
+   } 
+   post{
+     always{
+       cleanWs()
+       }
+     }
 }
