@@ -52,7 +52,7 @@ pipeline {
         steps {
           script {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            withCredentials([usernamePassword(credentialsId: 'd9246168-45b2-460e-b3ea-6877eb22d56f', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            withCredentials([usernamePassword(credentialsId: 'gitcli-password', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
             sh "git add ."
             sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'"
