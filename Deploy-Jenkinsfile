@@ -42,10 +42,10 @@ pipeline {
         echo `pwd`
         TAG=$(grep "tag"  ./myproject2/values.yaml|head -n1)
         echo $TAG
-        sed -i "s%$TAG%  tag: s${image}%g" ./myproject2/values.yaml
+        sed -i 's%$TAG%  tag: s${image}%g' ./myproject2/values.yaml
         TAG2=$(grep "tag"  ./myproject2/values.yaml|tail -n1)
         echo $TAG2
-        sed -i "s%$TAG2%  tag: s${image}%g" ./myproject2/values.yaml'''    
+        sed -i 's%$TAG2%  tag: s${image}%g' ./myproject2/values.yaml'''    
         }
       }
       stage("update helm chart on git"){
