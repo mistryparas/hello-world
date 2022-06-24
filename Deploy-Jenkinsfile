@@ -39,6 +39,7 @@ pipeline {
       stage("update tag"){
         steps {
         sh '''#!/bin/bash
+        echo `pwd`
         TAG=$(grep "tag"  ./myproject2/values.yaml|head -n1)
         echo $TAG
         sed -i "s/$TAG/  tag: ${image}/g" ./myproject2/values.yaml
