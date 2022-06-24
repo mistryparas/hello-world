@@ -18,7 +18,7 @@
         <git.url>https://github.com/mistryparas/hello-world.git</git.url>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <docker.repository.url>192.168.56.250:8084/repository/sysadmin-service</docker.repository.url>
+        <docker.repository.url>192.168.56.250:8082/repository/duclo-docker</docker.repository.url>
         <docker.repo.username>admin</docker.repo.username>
 		<docker.repo.password>redhat</docker.repo.password>
     		<dockerfile.maven.plugin>1.4.13</dockerfile.maven.plugin>
@@ -153,23 +153,23 @@
     <repositories>
         <repository>
             <id>duclo-snapshot</id>
-            <url>http://192.168.56.250:8081/repository/backend-library-snapshot/</url>
+            <url>http://192.168.56.250:8081/repository/backend-service-snapshot/</url>
             <snapshots><enabled>true</enabled></snapshots>
         </repository>
         <repository>
             <id>duclo-release</id>
-            <url>http://192.168.56.250:8081/repository/backend-library/</url>
+            <url>http://192.168.56.250:8081/repository/backend-service/</url>
             <snapshots><enabled>false</enabled></snapshots>
         </repository>
     </repositories>
     <distributionManagement>
         <snapshotRepository>
             <id>duclo-snapshot</id>
-            <url>http://192.168.56.250:8081/repository/backend-library-snapshot/</url>
+            <url>http://192.168.56.250:8081/repository/backend-service-snapshot/</url>
         </snapshotRepository>
         <repository>
             <id>duclo-release</id>
-            <url>http://192.168.56.250:8081/repository/backend-library/</url>
+            <url>http://192.168.56.250:8081/repository/backend-service/</url>
         </repository>
     </distributionManagement>
 
