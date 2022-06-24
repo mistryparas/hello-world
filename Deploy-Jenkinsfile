@@ -23,7 +23,7 @@ pipeline {
       }
       stage("dev-deploy"){
         steps{
-        sshPublisher(publishers: [sshPublisherDesc(configName: 'Kube-master', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'argocd app set myproject2 --helm-set canaryDeploy.replicas="0" --helm-set deployment.tag="${image}"', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])    
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'Kube-master', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'argocd app set myproject2 --helm-set canaryDeploy.replicas="0" --helm-set deployment.tag="s${image}"', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])    
         }
       }
       stage("cleanup"){
@@ -61,9 +61,9 @@ pipeline {
           }
       }
    } 
-   post{
-     always{
-       cleanWs()
-       }
-     }
+   //post{
+   //  always{
+   //    cleanWs()
+   //    }
+   //  }
 }
