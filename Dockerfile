@@ -1,4 +1,5 @@
-FROM openjdk:17-alpine
+FROM anapsix/alpine-java
+
 MAINTAINER cloudops-devops
 
 ARG JAR_FILE
