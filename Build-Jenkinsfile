@@ -35,7 +35,7 @@ pipeline {
       stage("export Env") {
        	steps {
        	  script {
-       	      env.VER= sh (returnStdout: true,script: '''echo $(printf 'VER\t${project.version}' | mvn help:evaluate | grep '^VER' | cut -f2| cut -d "-" -f1)-${BUILD_NUMBER}''')
+       	      env.VER= sh (returnStdout: true,script: '''echo $(printf 'VER\t${project.version}' | mvn help:evaluate | grep '^VER' | cut -f2| cut -d "-" -f1)-${BUILD_NUMBER}''').trim()
        	  }
        	  sh '''echo "new $VER"'''
        // 	build job: 'CD-backend', parameters: [$class: 'StringParameterValue', name: 'image', value: '8.0.${BUILD_NUMBER}'], wait: true	
