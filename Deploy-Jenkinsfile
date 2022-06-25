@@ -43,10 +43,10 @@ pipeline {
         echo `pwd`
         TAG=$(grep "tag"  ./myproject2/values.yaml|head -n1)
         echo $TAG
-        sed -i 's/$TAG/  tag: s${image}/g' ./myproject2/values.yaml
+        sed -i "s/\$TAG/  tag: s\${image}/g" ./myproject2/values.yaml
         TAG2=$(grep "tag"  ./myproject2/values.yaml|tail -n1)
         echo $TAG2
-        sed -i 's/$TAG2/  tag: s${image}/g' ./myproject2/values.yaml
+        sed -i "s/\$TAG2/  tag: s\${image}/g" ./myproject2/values.yaml
         grep "tag" ./myproject2/values.yaml
         '''    
         }
@@ -55,7 +55,7 @@ pipeline {
         steps {
           script {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            withCredentials([usernamePassword(credentialsId: 'gitcli-password', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            withCredentials([usernamePassword(credentialsId: '6114dd39-41ac-42ed-a22f-bfc31c47db8b', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
             sh "git add ."
             sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'"
