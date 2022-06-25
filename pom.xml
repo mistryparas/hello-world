@@ -16,8 +16,8 @@
         <!-- git.url should not have / at the end. -->
         <!-- For an exampe, https://github.com/duclo/backend-shared -->
         <git.url>https://github.com/mistryparas/hello-world.git</git.url>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>7</maven.compiler.source>
+        <maven.compiler.target>7</maven.compiler.target>
         <docker.repository.url>192.168.56.250:8082/repository/myproject2</docker.repository.url>
         <docker.repo.username>admin</docker.repo.username>
 		<docker.repo.password>redhat</docker.repo.password>
