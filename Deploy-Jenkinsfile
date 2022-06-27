@@ -21,7 +21,7 @@ pipeline {
         sh '''
         #!/bin/bash
         sleep 30
-        CMD=$(curl -v 192.168.56.102:30012  | grep "Hello")
+        CMD=$(curl -v 192.168.56.102:30022  | grep "Hello")
         if [[ $? == 0 ]]; then
             echo "Application is working"
         else
