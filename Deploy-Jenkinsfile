@@ -16,9 +16,19 @@ pipeline {
         sshPublisher(publishers: [sshPublisherDesc(configName: 'Kube-master', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'argocd app set myproject2 --helm-set canaryDeploy.tag="s${image}" --helm-set canaryDeploy.replicas="1"', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
         }
       }
-      stage("Approval") {
+      stage("Approval"){
         steps {
-        input message: 'Canary Deployment successfully running Approval for deploy on dev pod', ok: 'Approval'
+        sh '''
+        #!/bin/bash
+        sleep 30
+        CMD=$(curl -v localhost:30022  | grep "Hello")
+        if [[ $? == 0 ]]; then
+            echo "Application is working"
+        else
+            echo "There might be some issue in application"
+            currentBuild.result = 'ABORTED'
+        fi
+        '''
         }
       }
       stage("dev-deploy"){
@@ -65,9 +75,9 @@ pipeline {
           }
       }
    } 
-   //post{
-   //  always{
-   //    cleanWs()
-   //    }
-   //  }
+   post{
+     always{
+       cleanWs()
+     }
+   }
 }
