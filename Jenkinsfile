@@ -7,7 +7,7 @@ pipeline
               script{
               def ScmVar = checkout(
                 [$class: 'GitSCM',
-                branches: [[name: '*/master']],
+                branches: [[name: '*/mytest']],
                 extensions: [],
                 userRemoteConfigs: [[url: 'https://github.com/mistryparas/hello-world.git']]
                     ]
@@ -39,15 +39,6 @@ pipeline
               sh '''
               docker build -t nexustest2:2.\${BUILD_NUMBER} .
               '''
-            }
-        }
-        stage("image push") {
-            steps {
-              sh '''
-              docker login -u admin -p redhat 192.168.56.250:9092
-              docker tag nexustest2:2.${BUILD_NUMBER} 192.168.56.250:9092/dockertest2:2.${GitCommitID}.${BUILD_NUMBER}
-              docker push 192.168.56.250:9092/dockertest2:2.${GitCommitID}.${BUILD_NUMBER}
-              docker rmi -f nexustest2:2.${BUILD_NUMBER} 192.168.56.250:9092/dockertest2:2.${GitCommitID}.${BUILD_NUMBER}  '''
             }
         }
         
